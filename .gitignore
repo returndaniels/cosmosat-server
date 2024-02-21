@@ -1,0 +1,6 @@
+# files
+*.db
+*.pyc
+
+# folders
+venv/

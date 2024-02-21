@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Detecção de Raios</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <h1>Detecção de Raios</h1>
+  <h2>Registros Anteriores</h2>
+  <ul id="detections-list"></ul>
+  <script>
+    $(document).ready(function () {
+      // Carregar detecções usando AJAX
+      $.ajax({
+        url: "/detections",
+        method: "GET",
+        success: function (data) {
+          // Processar e exibir detecções
+          for (const detection of data) {
+            const listItem = `<li><a href="/detections/${detection.id}">${detection.start_time_str}</a></li>`;
+            $("#detections-list").append(listItem);
+          }
+        },
+        error: function (error) {
+          console.error("Erro ao obter detecções:", error);
+        }
+      });
+    });
+  </script>
+
+  <h2>Controle de Detecção</h2>
+  <button id="start-detection">Iniciar Detecção</button>
+  <button id="stop-detection">Parar Detecção</button>
+  <h2>Status da Câmera</h2>
+  <p id="camera-status"></p>
+  <script>
+    $(document).ready(function () {
+      // Obter status da câmera usando AJAX
+      $.ajax({
+        url: '/camera-status',
+        method: 'GET',
+        success: function (data) {
+          const cameraStatusText = data.status === 'enabled' ? 'Câmera Ativa' : 'Câmera Inativa';
+          $('#camera-status').text(cameraStatusText);
+        },
+        error: function (error) {
+          console.error('Erro ao obter status da câmera:', error);
+        }
+      });
+    });
+  </script>
+  <button id="toggle-camera">Ativar/Desativar Câmera</button>
+  <h2>Monitor de Detecção Atual</h2>
+  <div id="detection-monitor"></div>
+  <script>
+    $(document).ready(function () {
+      // TODO: Implementar lógica da interface
+      // ...
+    });
+  </script>
+</body>
+
+</html>
