@@ -104,7 +104,7 @@ source venv/bin/activate
 - **Windows:**
 
 ```
-venv\Scripts\activate
+source venv\Scripts\activate
 ```
 
 **Verificação:**
