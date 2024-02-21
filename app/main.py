@@ -1,6 +1,7 @@
 from fastapi import Request, HTTPException
 
 from api import crud
+from api.main import start_detection, stop_detection
 from app import app, templates
 
 
@@ -12,6 +13,22 @@ def root(request: Request):
 @app.get("/camera-status")
 def get_cam_status():
     return {"status": "enabled"}
+
+
+@app.get("/start-detection")
+def get_start_detection():
+    if start_detection() == 200:
+        return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
+    else:
+        raise HTTPException(status_code=500, detail=str("Falha na requisição"))
+
+
+@app.get("/stop-detection")
+def get_stop_detection():
+    if stop_detection() == 200:
+        return {"status": "ok", "code": 200, "detail": "Detecção encerrada"}
+    else:
+        raise HTTPException(status_code=500, detail=str("Falha na requisição"))
 
 
 @app.get("/detections")

@@ -50,6 +50,32 @@
   <h2>Controle de Detecção</h2>
   <button id="start-detection">Iniciar Detecção</button>
   <button id="stop-detection">Parar Detecção</button>
+  <script>
+    $("#start-detection").click(function () {
+      $.ajax({
+        url: '/start-detection',
+        method: 'GET',
+        success: function (data) {
+          console.log(data)
+        },
+        error: function (error) {
+          console.error('Erro ao obter status da câmera:', error);
+        }
+      });
+    });
+    $("#stop-detection").click(function () {
+      $.ajax({
+        url: '/stop-detection',
+        method: 'GET',
+        success: function (data) {
+          console.log(data)
+        },
+        error: function (error) {
+          console.error('Erro ao obter status da câmera:', error);
+        }
+      });
+    });
+  </script>
   <h2>Status da Câmera</h2>
   <p id="camera-status"></p>
   <script>

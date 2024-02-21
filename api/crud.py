@@ -7,11 +7,17 @@ def create_detection_record(start_time):
 
     Args:
         start_time (int): Timestamp de início da detecção (em segundos desde epoch).
+
+    Returns:
+        O ID do registro criado.
     """
 
     db = get_db()
+    cursor = db.cursor()
+
     db.execute("INSERT INTO detection_records (start_time) VALUES (?)", (start_time,))
     db.commit()
+    return cursor.lastrowid
 
 
 def create_lightning(timestamp, size, centroid_x, centroid_y, detection_id):
