@@ -2,8 +2,6 @@ from fastapi import Request, HTTPException
 
 from api import crud
 from app import app, templates
-from db.models import DetectionRecord
-from typing import List
 
 
 @app.get("/")

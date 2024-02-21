@@ -2,6 +2,13 @@ import sqlite3
 
 
 def create_db():
+    """
+    Cria e configura o banco de dados SQLite para armazenar informações sobre relâmpagos e detecções.
+
+    Returns:
+        sqlite3.Connection: Conexão com o banco de dados recém-criado.
+    """
+
     db = sqlite3.connect("detections.db")
     db.execute(
         """CREATE TABLE IF NOT EXISTS lightnings (
@@ -24,10 +31,18 @@ def create_db():
 
 
 def get_db():
+    """
+    Obtém a conexão com o banco de dados SQLite para ser usada em operações de leitura/gravação.
+
+    Returns:
+        sqlite3.Connection: Conexão com o banco de dados.
+    """
+
     db = sqlite3.connect("detections.db")
     db.row_factory = sqlite3.Row
     return db
 
 
+# Criando uma instância do banco de dados e fechando-a imediatamente para evitar vazamentos.
 db = create_db()
 db.close()
