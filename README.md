@@ -81,6 +81,13 @@
 
 ## Criando e ativando o ambiente virtual Python (venv):
 
+**Garanta que as dependências GTK estejam instaladas**
+```
+sudo apt install libgtk-3-dev
+export DISPLAY=:0
+```
+
+
 **Passo 1:** Instalar o módulo venv (se ainda não estiver instalado):
 
 ```
