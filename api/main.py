@@ -1,5 +1,5 @@
 from api import crud
-from api.models import DetectionRecord
+from db.models import DetectionRecord
 from time import time
 
 
