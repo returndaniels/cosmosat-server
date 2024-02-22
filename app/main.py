@@ -59,10 +59,6 @@ def delete_detection(id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.websocket("/raios/")
-async def websocket_endpoint(websocket: WebSocket, client_id: int):
+@app.websocket("/ws-connect/")
+async def ws_connect(websocket: WebSocket):
     await ws.connect(websocket)
-    while True:
-        data = await websocket.receive_text()
-        await ws.send_personal_message(f"You wrote: {data}", websocket)
-        await ws.broadcast(f"Client #{client_id} says: {data}")
