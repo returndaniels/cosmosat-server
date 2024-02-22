@@ -37,6 +37,7 @@ async def get_start_detection():
         process.start()
         return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
     except Exception as e:
+        print("Error:", e)
         raise HTTPException(status_code=500, detail=str("Iniciar a adetecção falhou."))
 
 
