@@ -20,10 +20,10 @@ def get_cam_status():
 
 @app.get("/start-detection")
 async def get_start_detection():
-    if await start_detection() == 200:
-        return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
-    else:
-        raise HTTPException(status_code=500, detail=str("Falha na requisição"))
+    try:
+        return start_detection()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str("Falha na requisição", str(e)))
 
 
 @app.get("/stop-detection")

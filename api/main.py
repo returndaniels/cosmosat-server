@@ -1,7 +1,7 @@
 from datetime import datetime
+from multiprocessing import Process
 from api import crud
 from app.ws import ConnectionManager
-
 from core.detection import LightningDetect
 
 ws = ConnectionManager.instance()
@@ -29,13 +29,18 @@ async def start_detection():
     now = datetime.now()
     start_time = datetime.timestamp(now)
     detection_id = crud.create_detection_record(start_time)
-    detect = LightningDetect(detection_id, save_data_func, save_frame_func)
 
-    if not detect.pid:
-        return await detect.detecting_process()
+    def detection_process():
+        detect = LightningDetect(detection_id, save_data_func, save_frame_func)
+        detect.detecting_process()
 
-    # Iniciar streamer de dados
-    # ...
+    process = Process(target=detection_process)
+    process.start()
+
+    # Optionally wait for process to finish before returning
+    # process.join()
+
+    return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
 
 
 def stop_detection():
