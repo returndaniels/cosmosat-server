@@ -1,4 +1,4 @@
-from fastapi import Request, HTTPException, WebSocket
+from fastapi import Request, HTTPException, WebSocket, WebSocketDisconnect
 
 from api import crud
 from api.main import start_detection, stop_detection
@@ -62,3 +62,9 @@ def delete_detection(id: int):
 @app.websocket("/ws-connect/")
 async def ws_connect(websocket: WebSocket):
     await ws.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            print("ws message:", data)
+    except WebSocketDisconnect:
+        ws.disconnect(websocket)
