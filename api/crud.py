@@ -14,11 +14,15 @@ def create_detection_record(start_time):
 
     db = get_db()
     cursor = db.cursor()
-
-    db.execute("INSERT INTO detection_records (start_time) VALUES (?)", (start_time,))
+    cursor.execute(
+        "INSERT INTO detection_records (start_time) VALUES (?)", (start_time,)
+    )
     db.commit()
-    print("create_detection_record", cursor.lastrowid)
-    return cursor.lastrowid
+
+    lastrowid = cursor.lastrowid
+    cursor.close()
+    print(lastrowid)
+    return lastrowid
 
 
 def create_lightning(timestamp, size, centroid_x, centroid_y, detection_id):
