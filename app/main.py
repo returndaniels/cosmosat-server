@@ -9,6 +9,7 @@ from app import app, templates
 from app.ws import ConnectionManager
 
 ws = ConnectionManager()
+detection_process = None
 
 
 @app.get("/")
@@ -24,26 +25,39 @@ def get_cam_status():
 @app.get("/start-detection")
 def get_start_detection():
     try:
+        global detection_process
+        if detection_process is not None:
+            raise HTTPException(status_code=400, detail="Detecção já iniciada.")
+
         parent_pipe, child_pipe = Pipe()
-        process = Process(target=start_detection, args=(child_pipe,))
-        process.start()
+        detection_process = Process(target=start_detection, args=(child_pipe,))
+        detection_process.start()
 
-        asyncio.run(listen_pipe(process, parent_pipe))
+        asyncio.run(listen_pipe(detection_process, parent_pipe))
 
-        return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
+        return {"status": "ok", "code": 200, "detail": "Detecção iniciada."}
     except Exception as e:
         print("Error:", e)
-        raise HTTPException(status_code=500, detail="Iniciar a adetecção falhou.")
+        raise HTTPException(status_code=500, detail="Iniciar a detecção falhou.")
 
 
 @app.get("/stop-detection")
 def get_stop_detection():
     try:
-        stop_detection()
-        return {"status": "ok", "code": 200, "detail": "Detecção encerrada"}
+        global detection_process
+        if detection_process is None:
+            raise HTTPException(
+                status_code=400, detail="Detecção não está em andamento."
+            )
+
+        detection_process.terminate()
+        detection_process.join()
+        detection_process = None
+
+        return {"status": "ok", "code": 200, "detail": "Detecção encerrada."}
     except Exception as e:
         print("Error:", e)
-        raise HTTPException(status_code=500, detail="Falha na requisição")
+        raise HTTPException(status_code=500, detail="Falha na requisição.")
 
 
 @app.get("/detections")
