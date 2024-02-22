@@ -22,20 +22,20 @@ def start_detection():
     now = datetime.now()
     start_time = datetime.timestamp(now)
     detection_id = crud.create_detection_record(start_time)
-    pid = os.fork()
+    detect = LightningDetect(detection_id, save_data_func, save_frame_func)
 
-    if pid:
-        detect = LightningDetect(detection_id, save_data_func, save_frame_func)
+    if not detect.pid:
         detect.detecting_process()
-    else:
-        return 200
+
     # Iniciar streamer de dados
     # ...
 
 
 def stop_detection():
     try:
-        os.kill(pid, signal.SIGTERM)
+        detect = LightningDetect()
+        os.kill(detect.pid, signal.SIGTERM)
+        detect.pid = None
         print(f"Sent SIGTERM signal to process {pid}")
     except OSError:
         print(f"Failed to send SIGTERM signal to process {pid}")
