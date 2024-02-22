@@ -1,5 +1,6 @@
-from api import crud
 from datetime import datetime
+from api import crud
+from app.ws import broadcast_raio
 
 from core.detection import LightningDetect
 
@@ -9,7 +10,8 @@ pid = None
 def save_data_func(detection_id, centroid_x, centroid_y, size):
     now = datetime.now()
     timestamp = datetime.timestamp(now)
-    crud.create_lightning(timestamp, size, centroid_x, centroid_y, detection_id)
+    raio = crud.create_lightning(timestamp, size, centroid_x, centroid_y, detection_id)
+    broadcast_raio(raio)
 
 
 def save_frame_func(frame):

@@ -75,7 +75,7 @@ class LightningDetect(Singleton):
     def detecting_process(self):
         self.pid = os.fork()
         if self.pid:
-            while self.pid is not None:
+            while True:
                 ret, frame = self.cap.read()
                 hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
                 part_mask = cv2.inRange(hsv, self.lower, self.upper)
@@ -109,9 +109,10 @@ class LightningDetect(Singleton):
     def kill_process(self):
         if self.pid:
             try:
+                self.cap.release()
+                cv2.destroyAllWindows()
                 os.kill(self.pid, signal.SIGTERM)  # Attempt graceful termination
                 os.waitpid(self.pid, 0)  # Wait for process to exit
-                self.pid = None
             except OSError as e:
                 print("Error killing process:", e)
         else:

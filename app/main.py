@@ -3,6 +3,7 @@ from fastapi import Request, HTTPException
 from api import crud
 from api.main import start_detection, stop_detection
 from app import app, templates
+from app.ws import on_connect, on_disconnect, on_message
 
 
 @app.get("/")
@@ -54,3 +55,6 @@ def delete_detection(id: int):
         return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+app.add_websocket_route("/raios/", on_connect, on_message, on_disconnect)

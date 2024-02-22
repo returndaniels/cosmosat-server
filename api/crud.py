@@ -33,6 +33,8 @@ def create_lightning(timestamp, size, centroid_x, centroid_y, detection_id):
     """
 
     db = get_db()
+    cursor = db.cursor()
+
     db.execute(
         "INSERT INTO lightnings (timestamp, size, centroid_x, centroid_y, detection_id) VALUES (?, ?, ?, ?, ?)",
         (
@@ -44,6 +46,7 @@ def create_lightning(timestamp, size, centroid_x, centroid_y, detection_id):
         ),
     )
     db.commit()
+    return cursor.lastrowid
 
 
 def get_all_detection_records():
