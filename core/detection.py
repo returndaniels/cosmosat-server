@@ -1,5 +1,3 @@
-import os
-import signal
 import cv2
 import numpy as np
 
@@ -55,47 +53,31 @@ class LightningDetect(Singleton):
             return 0, 0
 
     async def detecting_process(self):
-        self.pid = os.fork()
-        if self.pid:
-            while True:
-                ret, frame = self.cap.read()
-                hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                part_mask = cv2.inRange(hsv, self.lower, self.upper)
-                mask = cv2.bitwise_or(part_mask, part_mask)
-                contours, _ = cv2.findContours(
-                    mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-                )
+        while True:
+            ret, frame = self.cap.read()
+            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            part_mask = cv2.inRange(hsv, self.lower, self.upper)
+            mask = cv2.bitwise_or(part_mask, part_mask)
+            contours, _ = cv2.findContours(
+                mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+            )
 
-                for contour in contours:
-                    area = cv2.contourArea(contour)
+            for contour in contours:
+                area = cv2.contourArea(contour)
 
-                    if area > 500:
-                        cx, cy = self.find_centroid(contour)
+                if area > 500:
+                    cx, cy = self.find_centroid(contour)
 
-                        await self.save_data_func(self.detection_id, cx, cy, area)
-                        self.save_frame_func(frame)
+                    await self.save_data_func(self.detection_id, cx, cy, area)
+                    self.save_frame_func(frame)
 
-                        cv2.drawContours(frame, [contour], 0, (0, 255, 0), 2)
-                        cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
+                    cv2.drawContours(frame, [contour], 0, (0, 255, 0), 2)
+                    cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
 
-                cv2.imshow("Object Tracking", frame)
+            cv2.imshow("Object Tracking", frame)
 
-                if cv2.waitKey(1) & 0xFF == ord("q"):
-                    break
-        else:
-            return 200
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
 
         self.cap.release()
         cv2.destroyAllWindows()
-
-    def kill_process(self):
-        if self.pid:
-            try:
-                self.cap.release()
-                cv2.destroyAllWindows()
-                os.kill(self.pid, signal.SIGTERM)  # Attempt graceful termination
-                os.waitpid(self.pid, 0)  # Wait for process to exit
-            except OSError as e:
-                print("Error killing process:", e)
-        else:
-            print("Process not running.")
