@@ -59,6 +59,10 @@ class LightningDetect(Singleton):
         except (cv2.error, Exception) as e:
             print("Error initializing resources:", e)
 
+    @classmethod
+    def instance(cls):
+        return cls()
+
     def find_centroid(self, contour):
         M = cv2.moments(contour)
         if M["m00"] != 0:
