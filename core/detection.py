@@ -52,7 +52,7 @@ class LightningDetect(Singleton):
         else:
             return 0, 0
 
-    def detecting_process(self):
+    async def detecting_process(self):
         while True:
             ret, frame = self.cap.read()
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -68,7 +68,7 @@ class LightningDetect(Singleton):
                 if area > 500:
                     cx, cy = self.find_centroid(contour)
 
-                    # await self.save_data_func(self.detection_id, cx, cy, area)
+                    await self.save_data_func(self.detection_id, cx, cy, area)
                     self.save_frame_func(frame)
 
                     cv2.drawContours(frame, [contour], 0, (0, 255, 0), 2)

@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from api import crud
 from app.ws import ConnectionManager
@@ -29,7 +30,7 @@ def start_detection():
     start_time = datetime.timestamp(now)
     detection_id = crud.create_detection_record(start_time)
     detect = LightningDetect(detection_id, save_data_func, save_frame_func)
-    detect.detecting_process()
+    asyncio.run(detect.detecting_process())
 
 
 # async def start_detection():
