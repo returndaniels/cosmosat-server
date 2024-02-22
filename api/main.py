@@ -7,11 +7,11 @@ from core.detection import LightningDetect
 ws = ConnectionManager.instance()
 
 
-def save_data_func(detection_id, centroid_x, centroid_y, size):
+async def save_data_func(detection_id, centroid_x, centroid_y, size):
     now = datetime.now()
     timestamp = datetime.timestamp(now)
     crud.create_lightning(timestamp, size, centroid_x, centroid_y, detection_id)
-    ws.broadcast(
+    await ws.broadcast(
         {
             "timestamp": timestamp,
             "centroid_x": centroid_x,

@@ -54,7 +54,7 @@ class LightningDetect(Singleton):
         else:
             return 0, 0
 
-    def detecting_process(self):
+    async def detecting_process(self):
         self.pid = os.fork()
         if self.pid:
             while True:
@@ -72,7 +72,7 @@ class LightningDetect(Singleton):
                     if area > 500:
                         cx, cy = self.find_centroid(contour)
 
-                        self.save_data_func(self.detection_id, cx, cy, area)
+                        await self.save_data_func(self.detection_id, cx, cy, area)
                         self.save_frame_func(frame)
 
                         cv2.drawContours(frame, [contour], 0, (0, 255, 0), 2)
