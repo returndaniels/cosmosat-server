@@ -1,5 +1,3 @@
-import os
-import signal
 from api import crud
 from datetime import datetime
 
@@ -32,12 +30,8 @@ def start_detection():
 
 
 def stop_detection():
-    try:
-        detect = LightningDetect()
-        os.kill(detect.pid, signal.SIGTERM)
-        detect.pid = None
-        print(f"Sent SIGTERM signal to process {pid}")
-    except OSError as e:
-        print(f"Failed to send SIGTERM signal to process {pid}", str(e))
+    detector = LightningDetect.instance()
+    detector.kill_process()
+
     # Parar streamer de dados
     # ...

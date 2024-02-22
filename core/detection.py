@@ -1,4 +1,5 @@
 import os
+import signal
 import cv2
 import numpy as np
 
@@ -98,3 +99,13 @@ class LightningDetect(Singleton):
 
         self.cap.release()
         cv2.destroyAllWindows()
+
+    def kill_process(self):
+        if self.pid:
+            try:
+                os.kill(self.pid, signal.SIGTERM)  # Attempt graceful termination
+                os.waitpid(self.pid, 0)  # Wait for process to exit
+            except OSError as e:
+                print("Error killing process:", e)
+        else:
+            print("Process not running.")
