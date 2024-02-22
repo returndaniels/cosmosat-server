@@ -29,6 +29,8 @@ def start_detection():
     now = datetime.now()
     start_time = datetime.timestamp(now)
     detection_id = crud.create_detection_record(start_time)
+    print("start_detection", detection_id)
+
     detect = LightningDetect(detection_id, save_data_func, save_frame_func)
     asyncio.run(detect.detecting_process())
 

@@ -17,6 +17,7 @@ def create_detection_record(start_time):
 
     db.execute("INSERT INTO detection_records (start_time) VALUES (?)", (start_time,))
     db.commit()
+    print("create_detection_record", cursor.lastrowid)
     return cursor.lastrowid
 
 
