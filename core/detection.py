@@ -5,9 +5,7 @@ from singleton import Singleton
 
 
 class LightningDetect(Singleton):
-    def __init__(
-        self, detection_id=None, save_data_func=None, save_frame_func=None, ws=None
-    ):
+    def __init__(self, detection_id=None, pipe=None):
         """
         Creates a LightningDetect instance with optional configuration.
 
@@ -20,14 +18,12 @@ class LightningDetect(Singleton):
         """
 
         # Allow accessing attributes on subsequent calls without arguments
-        if not (detection_id or save_data_func or save_frame_func):
+        if not (detection_id or pipe):
             return
 
         # Initialize attributes only on the first call with arguments
-        self.ws = ws
+        self.pipe = pipe
         self.detection_id = detection_id
-        self.save_data_func = save_data_func
-        self.save_frame_func = save_frame_func
 
         # Initialize resources in a protected method to avoid duplication
         self._initialize_resources()
@@ -54,7 +50,7 @@ class LightningDetect(Singleton):
         else:
             return 0, 0
 
-    async def detecting_process(self):
+    def detecting_process(self):
         while True:
             ret, frame = self.cap.read()
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -70,8 +66,7 @@ class LightningDetect(Singleton):
                 if area > 500:
                     cx, cy = self.find_centroid(contour)
 
-                    await self.save_data_func(self.detection_id, cx, cy, area, self.ws)
-                    self.save_frame_func(frame)
+                    self.pipe.send((self.detection_id, cx, cy, area, frame))
 
                     cv2.drawContours(frame, [contour], 0, (0, 255, 0), 2)
                     cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)

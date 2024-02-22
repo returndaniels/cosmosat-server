@@ -1,9 +1,10 @@
+import asyncio
 from fastapi import Request, HTTPException, WebSocket, WebSocketDisconnect
 
-from multiprocessing import Process
+from multiprocessing import Pipe, Process
 
 from api import crud
-from api.main import start_detection, stop_detection
+from api.main import listen_pipe, start_detection, stop_detection
 from app import app, templates
 from app.ws import ConnectionManager
 
@@ -23,9 +24,12 @@ def get_cam_status():
 @app.get("/start-detection")
 async def get_start_detection():
     try:
-        ws = ConnectionManager.instance()
-        process = Process(target=start_detection, args=(ws,))
+        parent_pipe, child_pipe = Pipe()
+        process = Process(target=start_detection, args=(child_pipe,))
         process.start()
+
+        asyncio.run(listen_pipe(process, parent_pipe))
+
         return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
     except Exception as e:
         print("Error:", e)
