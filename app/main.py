@@ -28,15 +28,17 @@ async def get_start_detection():
         return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
     except Exception as e:
         print("Error:", e)
-        raise HTTPException(status_code=500, detail=str("Iniciar a adetecção falhou."))
+        raise HTTPException(status_code=500, detail="Iniciar a adetecção falhou.")
 
 
 @app.get("/stop-detection")
 def get_stop_detection():
-    if stop_detection() == 200:
+    try:
+        stop_detection()
         return {"status": "ok", "code": 200, "detail": "Detecção encerrada"}
-    else:
-        raise HTTPException(status_code=500, detail=str("Falha na requisição"))
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Falha na requisição")
 
 
 @app.get("/detections")
@@ -44,7 +46,8 @@ def get_all_detections():
     try:
         return crud.get_all_detection_records()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Falha ao bsucar detecções.")
 
 
 @app.get("/detections/{id}")
@@ -52,7 +55,8 @@ def get_detection(id: int):
     try:
         return crud.get_detection_record(id)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Falha ao bsucar detecção.")
 
 
 @app.delete("/detections/{id}")
@@ -61,7 +65,8 @@ def delete_detection(id: int):
         crud.delete_detection_record(id)
         return {"success": True}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Falha ao apagar detecção.")
 
 
 @app.websocket("/ws-connect/")
