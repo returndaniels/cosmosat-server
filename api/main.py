@@ -24,14 +24,19 @@ def start_detection():
 
     if not detect.pid:
         detect.detecting_process()
+        return 200
 
     # Iniciar streamer de dados
     # ...
 
 
 def stop_detection():
-    detector = LightningDetect.instance()
-    detector.kill_process()
+    try:
+        detector = LightningDetect.instance()
+        detector.kill_process()
+        return 200
+    except:
+        return 500
 
     # Parar streamer de dados
     # ...
