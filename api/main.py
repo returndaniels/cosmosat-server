@@ -28,8 +28,8 @@ def save_frame_func(frame):
 async def listen_pipe(process: Process, pipe):
     while process.is_alive():
         detection_id, cx, cy, size, frame = pipe.recv()
-        save_data_func(detection_id, cx, cy, size)
-        save_frame_func(frame)
+        await save_data_func(detection_id, cx, cy, size)
+        await save_frame_func(frame)
     pipe.close()
 
 
