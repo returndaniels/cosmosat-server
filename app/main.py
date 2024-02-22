@@ -22,7 +22,7 @@ def get_cam_status():
 
 
 @app.get("/start-detection")
-async def get_start_detection():
+def get_start_detection():
     try:
         parent_pipe, child_pipe = Pipe()
         process = Process(target=start_detection, args=(child_pipe,))
