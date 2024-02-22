@@ -40,8 +40,6 @@ async def start_detection():
     # Optionally wait for process to finish before returning
     # process.join()
 
-    return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
-
 
 def stop_detection():
     try:
