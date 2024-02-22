@@ -32,21 +32,8 @@ def start_detection():
     detect = LightningDetect(detection_id, save_data_func, save_frame_func)
     asyncio.run(detect.detecting_process())
 
-
-# async def start_detection():
-#     now = datetime.now()
-#     start_time = datetime.timestamp(now)
-#     detection_id = crud.create_detection_record(start_time)
-
-#     def detection_process():
-#         detect = LightningDetect(detection_id, save_data_func, save_frame_func)
-#         detect.detecting_process()
-
-#     process = Process(target=detection_process)
-#     process.start()
-
-#     # Optionally wait for process to finish before returning
-#     # process.join()
+    # Optionally wait for process to finish before returning
+    # process.join()
 
 
 def stop_detection():
