@@ -98,10 +98,21 @@
   <h2>Monitor de Detecção Atual</h2>
   <div id="detection-monitor"></div>
   <script>
-    $(document).ready(function () {
-      // TODO: Implementar lógica da interface
-      // ...
-    });
+    const API_URL = "ws://raspberrypi.local:8000/ws-connect/";
+    const listaRaios = document.getElementById("detection-monitor");
+
+    const connect = async () => {
+      const socket = await new WebSocket(API_URL);
+
+      socket.onmessage = (event) => {
+        const raio = JSON.parse(event.data);
+        const li = document.createElement("li");
+        li.textContent = `Timestemp: ${raio.timestamp} - Tamanho: ${raio.size} - Centroide: (${raio.centroid_x}, ${raio.centroid_y})`;
+        listaRaios.appendChild(li);
+      };
+    };
+
+    connect();
   </script>
 </body>
 
