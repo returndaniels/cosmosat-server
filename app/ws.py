@@ -20,4 +20,4 @@ class ConnectionManager(Singleton):
 
     async def broadcast(self, message):
         for connection in self.active_connections:
-            await connection.send(message)
+            await connection.send_json(message)
