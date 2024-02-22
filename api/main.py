@@ -23,8 +23,7 @@ def start_detection():
     detect = LightningDetect(detection_id, save_data_func, save_frame_func)
 
     if not detect.pid:
-        detect.detecting_process()
-        return 200
+        return detect.detecting_process()
 
     # Iniciar streamer de dados
     # ...

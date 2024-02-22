@@ -100,6 +100,8 @@ class LightningDetect(Singleton):
 
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
+        else:
+            return 200
 
         self.cap.release()
         cv2.destroyAllWindows()
