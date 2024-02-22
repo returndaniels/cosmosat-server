@@ -21,7 +21,7 @@ def get_cam_status():
 @app.get("/start-detection")
 async def get_start_detection():
     try:
-        start_detection()
+        await start_detection()
         return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str("Falha na requisição", str(e)))
