@@ -1,6 +1,6 @@
 from datetime import datetime
 from api import crud
-from app.ws import ConnectionManager, broadcast_raio
+from app.ws import ConnectionManager
 
 from core.detection import LightningDetect
 
