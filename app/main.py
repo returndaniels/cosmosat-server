@@ -23,7 +23,8 @@ def get_cam_status():
 @app.get("/start-detection")
 async def get_start_detection():
     try:
-        process = Process(target=start_detection)
+        ws = ConnectionManager.instance()
+        process = Process(target=start_detection, args=(ws,))
         process.start()
         return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
     except Exception as e:

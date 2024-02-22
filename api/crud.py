@@ -21,7 +21,6 @@ def create_detection_record(start_time):
 
     lastrowid = cursor.lastrowid
     cursor.close()
-    print(lastrowid)
     return lastrowid
 
 
