@@ -1,13 +1,11 @@
 from fastapi import Request, HTTPException, WebSocket, WebSocketDisconnect
 
-from datetime import datetime
 from multiprocessing import Process
 
 from api import crud
-from api.main import save_data_func, save_frame_func, stop_detection
+from api.main import start_detection, stop_detection
 from app import app, templates
 from app.ws import ConnectionManager
-from core.detection import LightningDetect
 
 ws = ConnectionManager()
 
@@ -25,15 +23,7 @@ def get_cam_status():
 @app.get("/start-detection")
 async def get_start_detection():
     try:
-        now = datetime.now()
-        start_time = datetime.timestamp(now)
-        detection_id = crud.create_detection_record(start_time)
-
-        def detection_process():
-            detect = LightningDetect(detection_id, save_data_func, save_frame_func)
-            detect.detecting_process()
-
-        process = Process(target=detection_process)
+        process = Process(target=start_detection)
         process.start()
         return {"status": "ok", "code": 200, "detail": "Detecção iniciada"}
     except Exception as e:

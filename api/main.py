@@ -1,5 +1,4 @@
 from datetime import datetime
-from multiprocessing import Process
 from api import crud
 from app.ws import ConnectionManager
 from core.detection import LightningDetect
@@ -23,6 +22,14 @@ async def save_data_func(detection_id, centroid_x, centroid_y, size):
 
 def save_frame_func(frame):
     pass
+
+
+def start_detection():
+    now = datetime.now()
+    start_time = datetime.timestamp(now)
+    detection_id = crud.create_detection_record(start_time)
+    detect = LightningDetect(detection_id, save_data_func, save_frame_func)
+    detect.detecting_process()
 
 
 # async def start_detection():
