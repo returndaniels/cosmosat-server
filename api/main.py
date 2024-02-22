@@ -37,7 +37,7 @@ def stop_detection():
         os.kill(detect.pid, signal.SIGTERM)
         detect.pid = None
         print(f"Sent SIGTERM signal to process {pid}")
-    except OSError:
-        print(f"Failed to send SIGTERM signal to process {pid}")
+    except OSError as e:
+        print(f"Failed to send SIGTERM signal to process {pid}", str(e))
     # Parar streamer de dados
     # ...
