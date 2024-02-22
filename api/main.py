@@ -42,15 +42,3 @@ def start_detection(pipe):
 
     # Optionally wait for process to finish before returning
     # process.join()
-
-
-def stop_detection():
-    try:
-        detector = LightningDetect.instance()
-        detector.kill_process()
-        return 200
-    except:
-        return 500
-
-    # Parar streamer de dados
-    # ...

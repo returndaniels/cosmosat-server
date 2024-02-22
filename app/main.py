@@ -4,7 +4,7 @@ from fastapi import Request, HTTPException, WebSocket, WebSocketDisconnect
 from multiprocessing import Pipe, Process
 
 from api import crud
-from api.main import listen_pipe, start_detection, stop_detection
+from api.main import listen_pipe, start_detection
 from app import app, templates
 from app.ws import ConnectionManager
 
