@@ -1,22 +1,23 @@
 from fastapi import WebSocket
 
-clientes = set()
+from singleton import Singleton
 
 
-async def on_connect(websocket: WebSocket):
-    await websocket.accept()
-    clientes.add(websocket)
+class ConnectionManager(Singleton):
+    def __init__(self):
+        self.active_connections: list[WebSocket] = []
 
+    @classmethod
+    def instance(cls):
+        return cls()
 
-async def on_message(websocket: WebSocket, data: str):
-    # Ignorar mensagens do cliente
-    pass
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
 
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
 
-async def on_disconnect(websocket: WebSocket, close_code: int):
-    clientes.remove(websocket)
-
-
-async def broadcast_raio(raio):
-    for cliente in clientes:
-        await cliente.send(raio.json())
+    async def broadcast(self, message):
+        for connection in self.active_connections:
+            await connection.send(message)

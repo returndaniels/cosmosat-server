@@ -1,9 +1,11 @@
-from fastapi import Request, HTTPException
+from fastapi import Request, HTTPException, WebSocket
 
 from api import crud
 from api.main import start_detection, stop_detection
 from app import app, templates
-from app.ws import on_connect, on_disconnect, on_message
+from app.ws import ConnectionManager
+
+ws = ConnectionManager()
 
 
 @app.get("/")
@@ -57,4 +59,10 @@ def delete_detection(id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-app.add_websocket_route("/raios/", on_connect, on_message, on_disconnect)
+@app.websocket("/raios/")
+async def websocket_endpoint(websocket: WebSocket, client_id: int):
+    await ws.connect(websocket)
+    while True:
+        data = await websocket.receive_text()
+        await ws.send_personal_message(f"You wrote: {data}", websocket)
+        await ws.broadcast(f"Client #{client_id} says: {data}")
