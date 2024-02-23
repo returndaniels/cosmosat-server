@@ -34,7 +34,7 @@
           // Processar e exibir detecções
           for (const detection of data) {
             const listItem = `
-            <li><a href="/detections/${detection.id}">
+            <li><a href="/detections/${detection.id}/raios">
               ${convertTimestampToDate(detection.start_time)}
             </a></li>`;
             $("#detections-list").append(listItem);
@@ -95,6 +95,21 @@
     });
   </script>
   <button id="toggle-camera">Ativar/Desativar Câmera</button>
+  <script>
+    $("#toggle-camera").click(function () {
+      $.ajax({
+        url: '/camera-status',
+        method: 'POST',
+        success: function (data) {
+          const cameraStatusText = data.status === 'enabled' ? 'Câmera Ativa' : 'Câmera Inativa';
+          $('#camera-status').text(cameraStatusText);
+        },
+        error: function (error) {
+          console.error('Erro ao alterar status da câmera:', error);
+        }
+      });
+    });
+  </script>
   <h2>Monitor de Detecção Atual</h2>
   <div id="detection-monitor"></div>
   <script>

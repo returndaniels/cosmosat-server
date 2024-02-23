@@ -14,10 +14,14 @@ def create_detection_record(start_time):
 
     db = get_db()
     cursor = db.cursor()
-
-    db.execute("INSERT INTO detection_records (start_time) VALUES (?)", (start_time,))
+    cursor.execute(
+        "INSERT INTO detection_records (start_time) VALUES (?)", (start_time,)
+    )
     db.commit()
-    return cursor.lastrowid
+
+    lastrowid = cursor.lastrowid
+    cursor.close()
+    return lastrowid
 
 
 def create_lightning(timestamp, size, centroid_x, centroid_y, detection_id):
@@ -78,12 +82,39 @@ def get_detection_record(id):
 
 def delete_detection_record(id):
     """
-    Exclui um registro de detecção específico da tabela "detection_records" com base no ID.
+    Exclui um registro de detecção específico da tabela "detection_records" com base no ID,
+    e também exclui todas as lightnings que possuem o `detection_id` associado.
 
     Args:
         id (int): ID do registro de detecção a ser excluído.
     """
 
     db = get_db()
+
+    # Deleta as lightnings associadas ao detection_id
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM lightnings WHERE detection_id = ?", (id,))
+    cursor.close()
+
+    # Deleta o registro de detecção
     db.execute("DELETE FROM detection_records WHERE id = ?", (id,))
     db.commit()
+
+
+def get_lightnings_by_detection_id(detection_id):
+    """
+    Busca todos os registros de relâmpagos na tabela "lightnings" que possuem um `detection_id` específico.
+
+    Args:
+      detection_id (int): ID da detecção a ser utilizada como filtro.
+
+    Returns:
+      list: Lista de registros de relâmpagos.
+    """
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM lightnings WHERE detection_id = ?", (detection_id,))
+    lightnings = cursor.fetchall()
+    cursor.close()
+    return lightnings
