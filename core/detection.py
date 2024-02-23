@@ -53,6 +53,12 @@ class LightningDetect(Singleton):
         """Inicializa o dispositivo de captura e os limites com tratamento adequado de erros."""
         try:
             self.cap = cv2.VideoCapture(0)
+            if self.cap.isOpened():
+                print("Camera inicializada com sucesso!")
+            else:
+                print("Erro ao inicializar a camera!")
+                return
+
             self.lower = np.array([80, 50, 50])
             self.upper = np.array([90, 255, 255])
         except (cv2.error, Exception) as e:
@@ -84,6 +90,9 @@ class LightningDetect(Singleton):
         """Loop principal de detecção de relâmpagos."""
         while True:
             ret, frame = self.cap.read()
+            if frame is None:
+                raise ("Erro ao capturar frame")
+
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             part_mask = cv2.inRange(hsv, self.lower, self.upper)
             mask = cv2.bitwise_or(part_mask, part_mask)
