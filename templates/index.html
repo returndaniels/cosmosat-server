@@ -59,7 +59,7 @@
           console.log(data)
         },
         error: function (error) {
-          console.error('Erro ao obter status da câmera:', error);
+          console.error('Erro ao iniciar detecção:', error);
         }
       });
     });
@@ -71,7 +71,7 @@
           console.log(data)
         },
         error: function (error) {
-          console.error('Erro ao obter status da câmera:', error);
+          console.error('Erro ao parar detecção:', error);
         }
       });
     });
@@ -111,6 +111,34 @@
     });
   </script>
   <h2>Monitor de vídeo</h2>
+  <button id="start-stream">Iniciar Stream</button>
+  <button id="stop-stream">Parar Stream</button>
+  <script>
+    $("#start-stream").click(function () {
+      $.ajax({
+        url: '/start-stream',
+        method: 'GET',
+        success: function (data) {
+          console.log(data)
+        },
+        error: function (error) {
+          console.error('Erro ao iniciar stream:', error);
+        }
+      });
+    });
+    $("#stop-stream").click(function () {
+      $.ajax({
+        url: '/stop-stream',
+        method: 'GET',
+        success: function (data) {
+          console.log(data)
+        },
+        error: function (error) {
+          console.error('Erro ao parar stream:', error);
+        }
+      });
+    });
+  </script>
   <div id="stream-video">
     <img id="streamimage" alt="Stream de vídeo" class="xform" src="http://raspberrypi.local:8080/?action=stream">
   </div>
