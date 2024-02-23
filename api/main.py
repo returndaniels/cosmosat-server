@@ -35,15 +35,13 @@ def save_frame_func(detection_id, frame, timestamp):
     """Salva um frame de vídeo em disco com a detecção de relâmpago.
 
     Args:
-        detection_id (str): Identificador único da detecção.
-        frame (numpy.ndarray): Frame de vídeo a ser salvo.
-        timestamp (float): Timestamp da detecção.
+      detection_id (str): Identificador único da detecção.
+      frame (numpy.ndarray): Frame de vídeo a ser salvo.
+      timestamp (float): Timestamp da detecção.
     """
 
-    dir_name = f"detection_{detection_id}"
-    home_dir = os.path.expanduser("~")
-    dir_path = os.path.join(home_dir, dir_name)
-
+    base_dir = os.path.join(os.path.expanduser("~"), "imagens_deteccao")
+    dir_path = os.path.join(base_dir, f"deteccao_{detection_id}")
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 

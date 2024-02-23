@@ -1,7 +1,8 @@
 import asyncio
+import os
 import picamera
-from fastapi import Request, HTTPException, WebSocket, WebSocketDisconnect
 
+from fastapi import Request, HTTPException, Response, WebSocket, WebSocketDisconnect
 from multiprocessing import Pipe, Process
 
 from api import crud
@@ -117,6 +118,34 @@ def get_detection(id: int):
         raise HTTPException(
             status_code=500, detail="Falha ao buscar raios da detecção."
         )
+
+
+@app.get("/detections/{id}/image/{timestamp}")
+async def download_image(id: int, timestamp: int):
+    try:
+        image_path = os.path.join(
+            os.path.expanduser("~"),
+            "imagens_deteccao",
+            f"deteccao_{id}",
+            f"frame_{timestamp}.jpg",
+        )
+
+        if not os.path.exists(image_path):
+            raise HTTPException(status_code=404, detail="Imagem não encontrada.")
+
+        with open(image_path, "rb") as image_file:
+            image_bytes = image_file.read()
+
+        headers = {
+            "Content-Type": "image/jpeg",
+            "Content-Disposition": f"attachment; filename=frame_{timestamp}.jpg",
+        }
+
+        return Response(content=image_bytes, headers=headers)
+
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Falha ao baixar imagem.")
 
 
 @app.websocket("/ws-connect/")
