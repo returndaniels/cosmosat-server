@@ -48,7 +48,7 @@ def get_start_stream():
         if stream_process is not None:
             raise HTTPException(status_code=400, detail="Stream de video já iniciada.")
 
-        stream_process = Process(target=start_stream)
+        stream_process = Process(target=start_stream, args=(stream_process,))
         stream_process.start()
 
         return {"status": "ok", "code": 200, "detail": "Stream de video iniciada."}
