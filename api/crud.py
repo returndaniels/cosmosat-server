@@ -118,3 +118,18 @@ def get_lightnings_by_detection_id(detection_id):
     lightnings = cursor.fetchall()
     cursor.close()
     return lightnings
+
+
+def get_lightning_by_id(id):
+    """
+    Obtém um registro de relâmpago específico da tabela "lightnings" com base no ID.
+
+    Args:
+        id (int): ID do registro de relâmpago a ser recuperado.
+
+    Returns:
+        tuple or None: Tupla representando o registro de relâmpago ou None se não for encontrado.
+    """
+
+    db = get_db()
+    return db.execute("SELECT * FROM lightnings WHERE id = ?", (id,)).fetchone()

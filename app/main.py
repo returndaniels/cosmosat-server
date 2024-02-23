@@ -121,14 +121,16 @@ def get_detection(id: int):
         )
 
 
-@app.get("/detections/{id}/image/{timestamp}")
-async def download_image(id: int, timestamp: int):
+@app.get("/detections/{id}/image/{lightning_id}")
+async def get_download_image(id: int, lightning_id: int):
     try:
+        lightning = crud.get_lightning_by_id(id, lightning_id)
+
         image_path = os.path.join(
             os.path.expanduser("~"),
             "imagens_deteccao",
             f"deteccao_{id}",
-            f"frame_{timestamp}.jpg",
+            f"frame_{lightning.timestamp}.jpg",
         )
 
         if not os.path.exists(image_path):
@@ -139,7 +141,7 @@ async def download_image(id: int, timestamp: int):
 
         headers = {
             "Content-Type": "image/jpeg",
-            "Content-Disposition": f"attachment; filename=frame_{timestamp}.jpg",
+            "Content-Disposition": f"attachment; filename=frame_{lightning.timestamp}.jpg",
         }
 
         return Response(content=image_bytes, headers=headers)
