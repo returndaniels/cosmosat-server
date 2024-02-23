@@ -73,6 +73,18 @@ button:hover {
   background-color: #fff;
 }
 
+#stream-video {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+  border: 1px solid #ccc
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
 #detection-monitor {
   padding: 1rem;
   width: 100%;

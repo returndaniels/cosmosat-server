@@ -146,6 +146,21 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 sudo lsof -ti tcp:8000 | xargs kill -9
 ```
 
+## Como fazer stream de video
+
+```bash
+sudo apt update
+sudo apt upgrade
+sudo apt install subversion libjpeg8-dev imagemagick libav-tools cmake
+git clone https://github.com/jacksonliam/mjpg-streamer.git
+cd mjpg-streamer/mjpg-streamer-experimental
+export LD_LIBRARY_PATH=.
+make
+make install
+```
+
+Se não houver candidato para a biblioteca `libjpeg8-dev`, ela pode ser subistituido por `libjpeg62-turbo-dev`
+
 ## Recursos Adicionais:
 
 - Documentação do FastAPI: [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)

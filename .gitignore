@@ -2,5 +2,8 @@
 *.db
 *.pyc
 
+mjpg-streamer/*
+!mjpg-streamer/streamer.py
+
 # folders
 venv/
