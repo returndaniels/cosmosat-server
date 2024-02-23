@@ -10,6 +10,16 @@ ws = ConnectionManager.instance()
 
 
 async def save_data_func(detection_id, centroid_x, centroid_y, size, timestamp):
+    """Salva dados de detecção de relâmpago no banco de dados e transmite via WebSocket.
+
+    Args:
+        detection_id (str): Identificador único da detecção.
+        centroid_x (int): Coordenada x do centroide do relâmpago.
+        centroid_y (int): Coordenada y do centroide do relâmpago.
+        size (int): Tamanho do relâmpago.
+        timestamp (float): Timestamp da detecção.
+    """
+
     crud.create_lightning(timestamp, size, centroid_x, centroid_y, detection_id)
     await ws.broadcast(
         {
@@ -22,8 +32,15 @@ async def save_data_func(detection_id, centroid_x, centroid_y, size, timestamp):
 
 
 def save_frame_func(detection_id, frame, timestamp):
-    dir_name = f"detection_{detection_id}"
+    """Salva um frame de vídeo em disco com a detecção de relâmpago.
 
+    Args:
+        detection_id (str): Identificador único da detecção.
+        frame (numpy.ndarray): Frame de vídeo a ser salvo.
+        timestamp (float): Timestamp da detecção.
+    """
+
+    dir_name = f"detection_{detection_id}"
     home_dir = os.path.expanduser("~")
     dir_path = os.path.join(home_dir, dir_name)
 
@@ -35,6 +52,13 @@ def save_frame_func(detection_id, frame, timestamp):
 
 
 async def listen_pipe(process: Process, pipe):
+    """Escuta um pipe para receber dados de detecção de relâmpago.
+
+    Args:
+        process (Process): Processo de detecção de relâmpago.
+        pipe: Pipe de comunicação com o processo de detecção.
+    """
+
     while process.is_alive():
         now = datetime.now()
         timestamp = datetime.timestamp(now)
@@ -45,6 +69,12 @@ async def listen_pipe(process: Process, pipe):
 
 
 def start_detection(pipe):
+    """Inicia um processo de detecção de relâmpago.
+
+    Args:
+        pipe: Pipe de comunicação com o processo de detecção.
+    """
+
     now = datetime.now()
     start_time = datetime.timestamp(now)
     detection_id = crud.create_detection_record(start_time)

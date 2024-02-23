@@ -5,16 +5,37 @@ from singleton import Singleton
 
 
 class LightningDetect(Singleton):
+    """Detecta relâmpagos em um vídeo usando processamento de imagem e HSV.
+
+    A classe usa captura de vídeo, limiarização HSV e análise de contornos para identificar
+    pixels brilhantes que podem representar relâmpagos. O centroide e a área de cada
+    relâmpago detectado são enviados através de um pipe para posterior processamento
+    ou visualização.
+
+    Atributos:
+        detection_id (str, opcional): Identificador único para a detecção.
+        pipe (callable, opcional): Função para enviar dados de detecção.
+        cap (cv2.VideoCapture): Objeto de captura de vídeo.
+        lower (np.array): Limite inferior da faixa de HSV para detecção de relâmpagos.
+        upper (np.array): Limite superior da faixa de HSV para detecção de relâmpagos.
+
+    Métodos:
+        __init__ (opcional detection_id, opcional pipe): Inicializa a instância.
+        _initialize_resources: Inicializa a captura de vídeo e os limites de HSV.
+        @classmethod instance: Retorna a instância singleton.
+        find_centroid (contour): Encontra o centroide de um contorno.
+        detecting_process: Loop principal de detecção de relâmpagos.
+    """
+
     def __init__(self, detection_id=None, pipe=None):
         """
-        Creates a LightningDetect instance with optional configuration.
+        Inicializa a instância com configuração opcional.
 
         Args:
-            detection_id (str, optional): Unique identifier for the detection.
-            save_data_func (callable, optional): Function to save detection data.
-            save_frame_func (callable, optional): Function to save the video frame.
+            detection_id (str, opcional): Identificador único para a detecção.
+            pipe (callable, opcional): Função para enviar dados de detecção.
 
-        If called without arguments, it accesses attributes from the existing instance.
+        Se chamado sem argumentos, acessa atributos da instância existente.
         """
 
         # Allow accessing attributes on subsequent calls without arguments
@@ -29,7 +50,7 @@ class LightningDetect(Singleton):
         self._initialize_resources()
 
     def _initialize_resources(self):
-        """Initializes capture device and thresholds with proper error handling."""
+        """Inicializa o dispositivo de captura e os limites com tratamento adequado de erros."""
         try:
             self.cap = cv2.VideoCapture(0)
             self.lower = np.array([80, 50, 50])
@@ -39,9 +60,18 @@ class LightningDetect(Singleton):
 
     @classmethod
     def instance(cls):
+        """Retorna a instância singleton."""
         return cls()
 
     def find_centroid(self, contour):
+        """Encontra o centroide de um contorno.
+
+        Args:
+            contour: Contorno do objeto detectado.
+
+        Retorna:
+            (int, int): Coordenadas (x, y) do centroide.
+        """
         M = cv2.moments(contour)
         if M["m00"] != 0:
             cX = int(M["m10"] / M["m00"])
@@ -51,6 +81,7 @@ class LightningDetect(Singleton):
             return 0, 0
 
     def detecting_process(self):
+        """Loop principal de detecção de relâmpagos."""
         while True:
             ret, frame = self.cap.read()
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
