@@ -124,8 +124,7 @@ def get_detection(id: int):
 @app.get("/detections/{id}/image/{lightning_id}")
 async def get_download_image(id: int, lightning_id: int):
     try:
-        lightning = crud.get_lightning_by_id(id, lightning_id)
-
+        lightning = crud.get_lightning_by_id(lightning_id)
         image_path = os.path.join(
             os.path.expanduser("~"),
             "imagens_deteccao",
