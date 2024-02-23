@@ -71,8 +71,7 @@
       $(document).on('click', '.download-image', function (event) {
         event.preventDefault();
         const lightningId = $(this).data('lightningId');
-        // Implement your logic to download the image associated with the lightning ID here
-        console.log(`Download image for lightning ID: ${lightningId}`);
+        window.location.href = imageUrl;
       });
     });
   </script>
