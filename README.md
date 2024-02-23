@@ -153,7 +153,9 @@ sudo apt update
 sudo apt upgrade
 sudo apt install subversion libjpeg8-dev imagemagick libav-tools cmake
 git clone https://github.com/jacksonliam/mjpg-streamer.git
-cd mjpg-streamer/mjpg-streamer-experimental
+mv mjpg-streamer/mjpg-streamer-experimental ./mjpgstreamer
+rm -r mjpg-streamer
+cd mjpgstreamer
 export LD_LIBRARY_PATH=.
 make
 make install

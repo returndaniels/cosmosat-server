@@ -10,10 +10,12 @@ from api import crud
 from api.main import listen_pipe, start_detection
 from app import app, templates
 from app.ws import ConnectionManager
+from mjpgstreamer.streamer import start_stream
 
 ws = ConnectionManager()
 # camera = picamera.PiCamera()
 detection_process = None
+stream_process = None
 
 
 @app.get("/")
@@ -37,6 +39,41 @@ def get_cam_status():
 #         camera.close()
 
 #     return {"status": "enabled" if camera.closed is False else "disabled"}
+
+
+@app.get("/start-stream")
+def get_start_stream():
+    try:
+        global stream_process
+        if stream_process is not None:
+            raise HTTPException(status_code=400, detail="Stream de video já iniciada.")
+
+        stream_process = Process(target=start_stream)
+        stream_process.start()
+
+        return {"status": "ok", "code": 200, "detail": "Stream de video iniciada."}
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Iniciar a Stream de video falhou.")
+
+
+@app.get("/stop-stream")
+def get_stop_detection():
+    try:
+        global stream_process
+        if stream_process is None:
+            raise HTTPException(
+                status_code=400, detail="Stream de video não está em andamento."
+            )
+
+        stream_process.terminate()
+        stream_process.join()
+        stream_process = None
+
+        return {"status": "ok", "code": 200, "detail": "Stream de video encerrada."}
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Falha na requisição.")
 
 
 @app.get("/start-detection")
