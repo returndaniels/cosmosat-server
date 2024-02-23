@@ -97,7 +97,7 @@ button:hover {
   overflow-y: auto;
 }
 
-#start-detection {
+#start-detection, #start-stream {
   background-color: #28a745;
   color: #fff;
 
@@ -114,7 +114,7 @@ button:hover {
   }
 }
 
-#stop-detection {
+#stop-detection, #stop-stream{
   background-color: #dc3545;
   color: #fff;
 

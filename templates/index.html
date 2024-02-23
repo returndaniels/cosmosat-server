@@ -113,6 +113,9 @@
   <h2>Monitor de vídeo</h2>
   <button id="start-stream">Iniciar Stream</button>
   <button id="stop-stream">Parar Stream</button>
+  <div id="stream-video">
+    <img id="streamimage" alt="Stream de vídeo" class="xform" src="http://raspberrypi.local:8080/?action=stream">
+  </div>
   <script>
     $("#start-stream").click(function () {
       $.ajax({
@@ -120,6 +123,11 @@
         method: 'GET',
         success: function (data) {
           console.log(data)
+          if (data.success) {
+            $("#streamimage").attr("src", "http://raspberrypi.local:8080/?action=stream");
+          } else {
+            console.error("Failed to start stream!");
+          }
         },
         error: function (error) {
           console.error('Erro ao iniciar stream:', error);
@@ -139,9 +147,6 @@
       });
     });
   </script>
-  <div id="stream-video">
-    <img id="streamimage" alt="Stream de vídeo" class="xform" src="http://raspberrypi.local:8080/?action=stream">
-  </div>
   <h2>Monitor de Detecção Atual</h2>
   <div id="detection-monitor"></div>
   <script>
