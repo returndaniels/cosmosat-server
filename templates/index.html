@@ -34,7 +34,7 @@
           // Processar e exibir detecções
           for (const detection of data) {
             const listItem = `
-            <li><a href="/detection/${detection.id}">
+            <li><a href="/detections/${detection.id}/raios">
               ${convertTimestampToDate(detection.start_time)}
             </a></li>`;
             $("#detections-list").append(listItem);
