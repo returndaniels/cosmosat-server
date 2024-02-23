@@ -123,6 +123,7 @@
         method: 'GET',
         success: function (data) {
           console.log(data)
+          $("#streamimage").attr("src", "http://raspberrypi.local:8080/?action=stream");
         },
         error: function (error) {
           console.error('Erro ao iniciar stream:', error);
