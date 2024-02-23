@@ -6,3 +6,4 @@ numpy==1.22.3
 opencv-python==4.5.3.56
 jinja2
 pysqlite3
+picamera

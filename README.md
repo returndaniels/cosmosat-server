@@ -82,21 +82,21 @@
 ## Criando e ativando o ambiente virtual Python (venv):
 
 **Garanta que as dependências GTK estejam instaladas**
-```
+
+```bash
 sudo apt install libgtk-3-dev
 export DISPLAY=:0
 ```
 
-
 **Passo 1:** Instalar o módulo venv (se ainda não estiver instalado):
 
-```
+```bash
 python -m pip install venv
 ```
 
 **Passo 2:** Criar o ambiente virtual:
 
-```
+```bash
 python -m venv venv
 ```
 
@@ -104,13 +104,13 @@ python -m venv venv
 
 - **Linux/macOS:**
 
-```
+```bash
 source venv/bin/activate
 ```
 
 - **Windows:**
 
-```
+```bash
 source venv\Scripts\activate
 ```
 
@@ -122,7 +122,7 @@ Após ativar o ambiente virtual, o nome do ambiente deve aparecer entre parênte
 
 **Passo 4:** Instalar as bibliotecas:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -130,14 +130,20 @@ pip install -r requirements.txt
 
 Após a instalação, você pode verificar se as bibliotecas foram instaladas corretamente usando o comando:
 
-```
+```bash
 pip list
 ```
 
 ## Executar aplicação
 
-```
+```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+## Caso o processo não encerre corretamente
+
+```bash
+sudo lsof -ti tcp:8000 | xargs kill -9
 ```
 
 ## Recursos Adicionais:
