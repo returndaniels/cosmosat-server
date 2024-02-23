@@ -1,6 +1,7 @@
 import asyncio
 import os
-import picamera
+
+# import picamera
 
 from fastapi import Request, HTTPException, Response, WebSocket, WebSocketDisconnect
 from multiprocessing import Pipe, Process
@@ -11,7 +12,7 @@ from app import app, templates
 from app.ws import ConnectionManager
 
 ws = ConnectionManager()
-camera = picamera.PiCamera()
+# camera = picamera.PiCamera()
 detection_process = None
 
 
@@ -23,19 +24,19 @@ def root(request: Request):
 @app.get("/camera-status")
 def get_cam_status():
     """Retorna o status atual da câmera."""
-    return {"status": "enabled" if camera.closed is False else "disabled"}
+    return {"status": "enabled"}  # if camera.closed is False else "disabled"}
 
 
-@app.post("/camera-status")
-def toggle_cam_status():
-    """Inverte o status da câmera (liga ou desliga)."""
-    if camera.closed:
-        camera.start_preview()
-    else:
-        camera.stop_preview()
-        camera.close()
+# @app.post("/camera-status")
+# def toggle_cam_status():
+#     """Inverte o status da câmera (liga ou desliga)."""
+#     if camera.closed:
+#         camera.start_preview()
+#     else:
+#         camera.stop_preview()
+#         camera.close()
 
-    return {"status": "enabled" if camera.closed is False else "disabled"}
+#     return {"status": "enabled" if camera.closed is False else "disabled"}
 
 
 @app.get("/start-detection")
