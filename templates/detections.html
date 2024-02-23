@@ -71,6 +71,7 @@
       $(document).on('click', '.download-image', function (event) {
         event.preventDefault();
         const lightningId = $(this).data('lightningId');
+        const imageUrl = `/detections/${detectionId}/image/${lightningId}`;
         window.location.href = imageUrl;
       });
     });
