@@ -64,7 +64,6 @@ def get_stop_detection():
                 status_code=400, detail="Stream de video não está em andamento."
             )
         stream_process.terminate()
-        stream_process.join()
         stream_process = None
 
         return {"status": "ok", "code": 200, "detail": "Stream de video encerrada."}

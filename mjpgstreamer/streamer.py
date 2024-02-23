@@ -13,19 +13,4 @@ def start_stream():
         ]
     )
 
-    # # Mantenha o processo em execução enquanto o processo pai estiver ativo
-    # while parent_process.is_alive():
-    #     message = pipe.recv()
-    #     if message == "stop":
-    #         break
-
-    #     # Verifique se o processo ainda está em execução
-    #     if process.poll() is not None:
-    #         # O processo terminou, então pare o loop
-    #         break
-
-    #     # Faça outras coisas enquanto o mjpg-streamer estiver em execução
-
-    # # Feche o processo mjpg-streamer
-    # process.terminate()
     return process
