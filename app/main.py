@@ -81,7 +81,7 @@ def get_all_detections():
         return crud.get_all_detection_records()
     except Exception as e:
         print("Error:", e)
-        raise HTTPException(status_code=500, detail="Falha ao bsucar detecções.")
+        raise HTTPException(status_code=500, detail="Falha ao buscar detecções.")
 
 
 @app.get("/detections/{id}")
@@ -90,7 +90,7 @@ def get_detection(id: int):
         return crud.get_detection_record(id)
     except Exception as e:
         print("Error:", e)
-        raise HTTPException(status_code=500, detail="Falha ao bsucar detecção.")
+        raise HTTPException(status_code=500, detail="Falha ao buscar detecção.")
 
 
 @app.delete("/detections/{id}")
@@ -101,6 +101,22 @@ def delete_detection(id: int):
     except Exception as e:
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Falha ao apagar detecção.")
+
+
+@app.get("/detections/{id}/raios")
+def get_detection(id: int, request: Request):
+    return templates.TemplateResponse("detections.html", {"request": request})
+
+
+@app.get("/detections/{id}/lightnings")
+def get_detection(id: int):
+    try:
+        return crud.get_lightnings_by_detection_id(id)
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(
+            status_code=500, detail="Falha ao buscar raios da detecção."
+        )
 
 
 @app.websocket("/ws-connect/")
