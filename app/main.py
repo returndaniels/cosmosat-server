@@ -125,7 +125,7 @@ def get_detection(id: int):
 async def get_download_image(id: int, lightning_id: int):
     try:
         lightning = crud.get_lightning_by_id(lightning_id)
-        timestamp = lightning[0]
+        timestamp = lightning[2]
         image_path = os.path.join(
             os.path.expanduser("~"),
             "imagens_deteccao",
