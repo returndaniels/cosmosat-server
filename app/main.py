@@ -16,7 +16,6 @@ ws = ConnectionManager()
 # camera = picamera.PiCamera()
 detection_process = None
 stream_process = None
-stream_pipe = None
 
 
 @app.get("/")
@@ -46,15 +45,10 @@ def get_cam_status():
 def get_start_stream():
     try:
         global stream_process
-        global stream_pipe
         if stream_process is not None:
             raise HTTPException(status_code=400, detail="Stream de video já iniciada.")
 
-        parent_pipe, child_pipe = Pipe()
-        stream_pipe = parent_pipe
-        stream_process = Process(target=start_stream, args=(stream_process, child_pipe))
-        stream_process.start()
-
+        stream_process = start_stream()
         return {"status": "ok", "code": 200, "detail": "Stream de video iniciada."}
     except Exception as e:
         print("Error:", e)
@@ -65,17 +59,13 @@ def get_start_stream():
 def get_stop_detection():
     try:
         global stream_process
-        global stream_pipe
         if stream_process is None:
             raise HTTPException(
                 status_code=400, detail="Stream de video não está em andamento."
             )
-        stream_pipe.send("stop")
-        stream_pipe.close()
         stream_process.terminate()
         stream_process.join()
         stream_process = None
-        stream_pipe = None
 
         return {"status": "ok", "code": 200, "detail": "Stream de video encerrada."}
     except Exception as e:
